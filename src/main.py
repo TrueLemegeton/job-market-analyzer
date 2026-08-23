@@ -1,9 +1,13 @@
 from playwright.sync_api import sync_playwright, Playwright
 from bs4 import BeautifulSoup
 import requests
+from datetime import datetime
+import time
+import random
 
 
 url = 'https://hh.ru/search/vacancy?text=Python&search_field=name&search_field=company_name&search_field=description&enable_snippets=true&hhtmFrom=main'
+
 
 HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
@@ -16,17 +20,18 @@ HEADERS = {
 }
 
 
-def get_vacancies_cards_links(playwright: Playwright) -> list:
+def get_vacancies_cards_links(playwright: Playwright, page_number) -> list:
     '''С одной страницы собераются ссылки с каждой карчтоки вакансии.'''
     chromium = playwright.chromium
     browser = chromium.launch(headless=False)
 
     page = browser.new_page()
-    page.goto(url, wait_until="commit")
-    page.wait_for_timeout(5000)
+    page.goto(f'{url}&page={page_number}', wait_until="commit")
+    page.wait_for_timeout(10000)
 
-    vacancies = page.locator('article')
+    vacancies = page.locator('[data-qa="vacancy-serp__vacancy"]')
     links = []
+    print(f'Всего вакансий: {vacancies.count()}')
 
     for i in range(vacancies.count()):
         vacancy = vacancies.nth(i)
@@ -70,6 +75,11 @@ def get_main_information(link: str):
     html = get_html(link)
     soup = BeautifulSoup(html, 'html.parser')
 
+
+
+
+    print('='*50)
+
     title_element = soup.select_one('[data-qa="vacancy-title"]')
 
     salary_element_net = soup.select_one('[data-qa="vacancy-salary-compensation-type-net"]')
@@ -82,7 +92,12 @@ def get_main_information(link: str):
     work_format_element = soup.select_one('[data-qa="work-formats-text"]')
     vacancy_hiring_format_element = soup.select_one('[data-qa="vacancy-hiring-formats"]')
     key_skills_elements = soup.select('[data-qa="skills-element"]')
-    publicated_at_element = soup.find('div', class_='bloko-columns-row')
+
+    description_element = soup.select_one('[data-qa="vacancy-description"]')
+    working_hours_element = soup.select_one('[data-qa="working-hours-text"]')
+    compensation_frequency_element = soup.select_one('[data-qa="compensation-frequency-text"]')
+    address_element = soup.select_one('[data-qa="vacancy-view-raw-address"]')
+
 
     
     title = title_element.get_text(strip=True) if title_element else None
@@ -97,9 +112,13 @@ def get_main_information(link: str):
     work_format = work_format_element.text if work_format_element else None
     vacancy_hiring_format = vacancy_hiring_format_element.text if vacancy_hiring_format_element else None
     key_skills = [skill.get_text(strip=True) for skill in key_skills_elements]
-    # publicated_at = 
+    description = description_element.text if description_element else None
+    working_hours = working_hours_element.text if working_hours_element else None
+    compensation_frequency = compensation_frequency_element.text if compensation_frequency_element else None
+    address = address_element.text if address_element else None
+    collected_at = datetime.now()
 
-
+    
     print(f'Название: {title}')
     print(f'Зарплата: {salary_net if salary_net else salary_gross}')
     print(f'Компания: {company}')
@@ -110,12 +129,30 @@ def get_main_information(link: str):
     print(f'{vacancy_hiring_format}')
     print(f'Ключевые навыки: {key_skills}')
     print(f'Ссылка: {link}')
-
+    print(f'Описание: {description}')
+    print(f'Адрес: {address}')
+    print(f'Период выплат: {compensation_frequency}')
+    print(f'{working_hours}')
+    print(f'Дата сбора: {collected_at}')
 
 def main():
     with sync_playwright() as playwright:
-        links = get_vacancies_cards_links(playwright)
-    get_main_information(links[0])
+        for page in range(3):
+            links = get_vacancies_cards_links(playwright, page_number=page)
+
+            print(f'Найдено ссылок: {len(links)}')
+            print(f'СТРАНИЦА: {page}')
+            print(f'СТРАНИЦА: {page}')
+            print(f'СТРАНИЦА: {page}')
+            print(f'СТРАНИЦА: {page}')
+
+            for link in links:
+                print('='*50)
+
+                get_main_information(link)
+
+                delay = random.uniform(2, 2.5)
+                time.sleep(delay)
     
 
 if __name__ == '__main__':
