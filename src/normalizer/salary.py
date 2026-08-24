@@ -1,12 +1,15 @@
 import re
 
 
-def normalize_salary(salary: str | None) -> dict:
+def normalize_salary(salary: str | None) -> dict | None:
     '''Из сырого поля с зарплатой вычленяет необходимые поля.'''
     if not salary:
         return None
 
     salary = salary.lower().strip()
+    salary = salary.replace(' ', '')
+
+    print(salary)
 
     if not salary:
         return None
@@ -30,19 +33,16 @@ def normalize_salary(salary: str | None) -> dict:
     elif len(clean_numbers) == 1:
         if salary.startswith('до'):
             salary_to = clean_numbers[0]
-            # type_salary = "Максимальная (до)"
 
         elif salary.startswith('от'):
             salary_from = clean_numbers[0]
-            # type_salary = "Минимальная (от)"
 
         else:
             salary_from = clean_numbers[0]
             salary_to = clean_numbers[0]
-            # type_salary = "Фиксированная"
 
     # Валюта
-    currency_match = re.search(r'₽|\$|so‘m', salary)
+    currency_match = re.search(r'₽|\$|so‘m|₸', salary)
     currency = currency_match.group() if currency_match else 'Неизвестно'
 
     # Период выплат
@@ -60,4 +60,10 @@ def normalize_salary(salary: str | None) -> dict:
     else:
         tax_status = 'Не указано'
 
-    return {}
+    return {
+        'salary_from': salary_from,
+        'salary_to': salary_to,
+        'salary_currency': currency,
+        'salary_period': period,
+        'tax_status': tax_status
+    }

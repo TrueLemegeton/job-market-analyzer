@@ -48,8 +48,6 @@ def parse_vacancy(link: str):
     address = get_text(soup, '[data-qa="vacancy-view-raw-address"]')
     collected_at = datetime.now()
 
-    print(salary_gross)
-    print(salary_net)
     return {
         'title': title,
         'salary': salary_net if salary_net else salary_gross,
