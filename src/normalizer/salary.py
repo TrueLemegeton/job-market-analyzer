@@ -2,14 +2,13 @@ import re
 
 
 def normalize_salary(salary: str | None) -> dict | None:
-    '''Из сырого поля с зарплатой вычленяет необходимые поля.'''
+    """Приводит сырой формат зарплаты к нормализованному виду."""
     if not salary:
         return None
 
     salary = salary.lower().strip()
-    salary = salary.replace(' ', '')
+    salary = re.sub(r'\s+', '', salary)
 
-    print(salary)
 
     if not salary:
         return None

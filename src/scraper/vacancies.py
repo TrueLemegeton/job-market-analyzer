@@ -6,13 +6,13 @@ from src.config import URL
 
 
 def get_vacancies_cards_links(playwright: Playwright, page_number) -> list:
-    '''С одной страницы собераются ссылки с каждой карчтоки вакансии.'''
+    '''С одной страницы собираются ссылки с каждой карчтоки вакансии.'''
     chromium = playwright.chromium
     browser = chromium.launch(headless=False)
 
     page = browser.new_page()
     page.goto(f'{URL}&page={page_number}', wait_until="commit")
-    page.wait_for_timeout(10000)
+    page.wait_for_timeout(30000)
 
     vacancies = page.locator('article') # [data-qa="vacancy-serp__vacancy"]
     links = []
@@ -29,5 +29,4 @@ def get_vacancies_cards_links(playwright: Playwright, page_number) -> list:
         links.append(link)
 
     browser.close()
-
     return links

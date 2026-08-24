@@ -26,6 +26,11 @@ def get_html(url: str, params=None) -> str | None:
 def parse_vacancy(link: str):
     '''Получает всю необходимую информацию с ссылки одной вакансии.'''
     html = get_html(link)
+
+    if html is None:
+        return
+        
+
     soup = BeautifulSoup(html, 'html.parser')
 
     key_skills_elements = soup.select('[data-qa="skills-element"]')
