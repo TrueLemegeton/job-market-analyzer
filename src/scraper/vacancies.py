@@ -3,6 +3,7 @@ from playwright.sync_api import Playwright
 from bs4 import BeautifulSoup
 
 from src.config import URL
+import re
 
 
 def get_vacancies_cards_links(playwright: Playwright, page_number) -> list:
@@ -30,3 +31,19 @@ def get_vacancies_cards_links(playwright: Playwright, page_number) -> list:
 
     browser.close()
     return links
+
+
+import re
+
+
+def get_vacancy_id(link: str | None) -> int | None:
+    """Достаёт числовой ID вакансии из ссылки HH."""
+    if not link:
+        return None
+
+    match = re.search(r'/vacancy/(\d+)', link)
+
+    if match:
+        return int(match.group(1))
+
+    return None
