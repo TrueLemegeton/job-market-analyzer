@@ -10,3 +10,5 @@ HEADERS = {
     'Sec-Ch-Ua-Mobile': '?0',
     'Sec-Ch-Ua-Platform': '"Windows"'
 }
+
+
