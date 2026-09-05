@@ -3,8 +3,14 @@ import re
 
 def normalize_experience(experience) -> dict | None:
     """Приводит сырой формат опыта к нормализованному виду."""
+
+    default_result = {
+        'experience_from': None,
+        'experience_to': None
+    }
+
     if not experience:
-        return None
+        return default_result
 
 
     experience = experience.lower().strip()
