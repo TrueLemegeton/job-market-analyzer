@@ -2,8 +2,16 @@ import re
 
 def normalize_working_hours(working_hours: str | None) -> dict | None:
     """Приводит сырые рабочие часы работы к нормализованному виду."""
+
+    default_result = {
+        'working_hours': [],
+        'has_other_options': False,
+        'by_agreement': False,
+        'has_night_shifts': False
+    }
+
     if working_hours is None:
-        return None
+        return default_result
 
     working_hours = re.sub(r'\s+', '', working_hours.lower().strip())
     hours = re.findall(r'\d+', working_hours)
