@@ -14,6 +14,7 @@ class Vacancy(Base):
     hh_id: Mapped[int | None] = mapped_column(unique=True)
     id: Mapped[int] = mapped_column(primary_key=True)
     title: Mapped[str] = mapped_column()
+    level: Mapped[str | None] = mapped_column()
     company: Mapped[str | None] = mapped_column()
     employment: Mapped[str | None] = mapped_column()
     link: Mapped[str] = mapped_column(unique=True)
@@ -101,7 +102,7 @@ class WorkingHours(Base):
     __tablename__ = 'working_hours'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    name: Mapped[str] = mapped_column(unique=True)
+    hours: Mapped[int] = mapped_column(unique=True)
 
     vacancies: Mapped[list['Vacancy']] = relationship(secondary='vacancy_working_hours', back_populates='working_hours')
 

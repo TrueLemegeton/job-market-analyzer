@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib import response
 
 import requests
 from bs4 import BeautifulSoup
@@ -16,7 +17,6 @@ def get_html(url: str, params=None) -> str | None:
             return HTML
    
         print(f'Ошибка загрузки страницы. Статус: {response.status_code}')
-
 
     except requests.RequestException as error:
         print(f'Возникла сетевая ошибка при запросе к {url}: {error}')

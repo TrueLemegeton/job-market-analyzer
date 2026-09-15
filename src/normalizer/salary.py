@@ -41,7 +41,7 @@ def normalize_salary(salary: str | None) -> dict | None:
             salary_to = clean_numbers[0]
 
     # Валюта
-    currency_match = re.search(r'₽|\$|so‘m|₸', salary)
+    currency_match = re.search(r'₽|\$|so‘m|₸|Br|', salary)
     currency = currency_match.group() if currency_match else 'Неизвестно'
 
     # Период выплат

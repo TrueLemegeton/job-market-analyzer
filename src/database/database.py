@@ -8,3 +8,8 @@ SessionLocal = sessionmaker(bind=engine)
 
 def create_tables() -> None:
     Base.metadata.create_all(engine)
+
+
+def clear_tables() -> None:
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)

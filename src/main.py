@@ -4,7 +4,7 @@ from src.pipeline import run_job_scraping_pipeline
 def main() -> None:
     '''Главная функция для запуска анализа вакансий.'''
     print("Запуск сбора вакансий...")
-    run_job_scraping_pipeline(page_count=1)
+    run_job_scraping_pipeline(page_count=3)
     print("Процесс успешно завершен.")
 
 
